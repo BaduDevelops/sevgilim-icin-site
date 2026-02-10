@@ -98,6 +98,7 @@ button:hover{transform:scale(1.08)}
   font-size:22px;
   animation:float linear forwards;
   opacity:.7;
+  animation-duration: calc(6s / var(--heartSpeed));
 }
 @keyframes float{
   to{transform:translateY(-110vh)}
@@ -171,6 +172,72 @@ body::before{
 @keyframes pop{
   from{transform:scale(0)}
   to{transform:scale(1)}
+}
+
+#heartLock{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:25px;
+}
+
+#heartContainer{
+  position:relative;
+}
+
+#bigHeart{
+  font-size:90px;
+  cursor:pointer;
+  animation:beat 1.6s infinite;
+  filter: drop-shadow(0 0 25px rgba(255,0,120,.7));
+  transition: transform .2s ease;
+}
+
+@keyframes beat{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.15)}
+}
+
+#powerCount{
+  position:absolute;
+  top:-35px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:1.4em;
+  font-weight:700;
+  opacity:.85;
+  animation:pop .3s;
+}
+
+@keyframes pop{
+  from{transform:translateX(-50%) scale(0)}
+  to{transform:translateX(-50%) scale(1)}
+}
+
+.particle{
+  position:absolute;
+  font-size:18px;
+  pointer-events:none;
+  animation:fly 1s forwards;
+}
+
+@keyframes fly{
+  to{
+    transform:translateY(-80px) scale(0);
+    opacity:0;
+  }
+}
+
+/* FINAL SCREEN */
+#heartMessage{
+  display:none;
+  font-size:clamp(1.8em,5vw,2.6em);
+  font-weight:700;
+  text-align:center;
+  max-width:700px;
+  line-height:1.4;
 }
 
 
@@ -259,6 +326,16 @@ body::before{
   <div class="surprise" id="finalText">
     Sonsuza kadar benimle olur musun? 💍❤️
   </div>
+</section>
+<section id="heartLock">
+  <h2>Kalbimi Açabilir misin? 🔒💖</h2>
+
+  <div id="heartContainer">
+    <div id="powerCount">0</div>
+    <div id="bigHeart">💖</div>
+  </div>
+
+  <div id="heartMessage"></div>
 </section>
 
 <script>
@@ -461,7 +538,84 @@ function endGameClean(){
 function clearHearts(){
   document.querySelectorAll(".game-heart").forEach(h => h.remove());
 }
+
+window.addEventListener("scroll",()=>{
+  const speed = window.scrollY * 0.002 + 1;
+  document.documentElement.style.setProperty("--heartSpeed", speed);
+});
+
+let heartClicks = 0;
+let heartLocked = false;
+
+const bigHeart = document.getElementById("bigHeart");
+const powerText = document.getElementById("powerCount");
+const heartMsg = document.getElementById("heartMessage");
+
+bigHeart.addEventListener("click", heartClick);
+bigHeart.addEventListener("touchstart", heartClick);
+
+function heartClick(e){
+  e.preventDefault();
+  if(heartLocked) return;
+
+  heartClicks++;
+  powerText.innerText = heartClicks;
+  powerText.style.animation = "none";
+  powerText.offsetHeight;
+  powerText.style.animation = "pop .3s";
+
+  spawnParticles();
+
+  bigHeart.style.transform = "scale(1.25)";
+  setTimeout(()=>bigHeart.style.transform="",120);
+
+  if(heartClicks >= 8){
+    explodeHeart();
+  }
+}
+
+function spawnParticles(){
+  for(let i=0;i<5;i++){
+    const p = document.createElement("div");
+    p.className="particle";
+    p.innerText="💖";
+    p.style.left = (Math.random()*40-20) + "px";
+    p.style.top = "0px";
+    bigHeart.appendChild(p);
+    setTimeout(()=>p.remove(),1000);
+  }
+}
+
+function explodeHeart(){
+  heartLocked = true;
+  bigHeart.style.animation="none";
+
+  heartExplosion(); // senin mevcut efekt
+  stopBackgroundHearts();
+
+  setTimeout(()=>{
+    document.body.style.transition="1s";
+    document.body.style.background="#120014";
+    showTypedMessage();
+  },600);
+}
+
+function showTypedMessage(){
+  heartMsg.style.display="block";
+  const text="Kalbim hep seninle olacak 💖";
+  let i=0;
+
+  const typer=setInterval(()=>{
+    heartMsg.innerHTML += text[i];
+    i++;
+    if(i>=text.length) clearInterval(typer);
+  },80);
+}
+
+
+
 startBackgroundHearts();
+
 
 </script>
 

@@ -6,6 +6,21 @@
 <title>💖 Sana</title>
 
 <style>
+  /* SCROLL FADE – GUARANTEED */
+.fade-section{
+  opacity:0;
+  transform:translateY(40px);
+  transition:
+    opacity .8s ease-out,
+    transform .8s ease-out;
+  will-change: opacity, transform;
+}
+
+.fade-section.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
@@ -239,6 +254,19 @@ body::before{
   max-width:700px;
   line-height:1.4;
 }
+/* SCROLL FADE */
+.fade-section{
+  opacity:0;
+  transform:translateY(40px);
+  transition:
+    opacity .9s ease,
+    transform .9s cubic-bezier(.2,.65,.3,1);
+}
+
+.fade-section.visible{
+  opacity:1;
+  transform:translateY(0);
+}
 
 
 </style>
@@ -260,53 +288,55 @@ body::before{
   <source src="Lovers Rock(_j_sG_Juncn8_).mp3" type="audio/mpeg">
 </audio>
 
-<section id="home">
+<section id="home" class="fade-section">
   <h1>İyi ki varsın ❤️</h1>
-  <p>Bu site sana. Çünkü sen benim en güzel detayımsın.</p>
+  <p>Bu site aşkıma. Çünkü sen benim en güzel detayımsın.</p>
   <button onclick="toggleMusic()">🎶 Müziği Aç / Kapat</button>
   <br>
   <button onclick="showHomeMessage()">Buraya Bas 💌</button>
   <div class="surprise" id="homeMessage"></div>
 </section>
 
-<section id="story">
+<section id="story" class="fade-section">
   <h2>Bizim Hikâyemiz 💞</h2>
   <p>
     Seninle her şey daha anlamlı.  
     Gülüşün, sesin, varlığın…  
-    Hayatımın en güzel kısmı.
+    Hayatımın en güzel kısmısın.
+    "Mutluluğum, adını kalbimde taşıyabilmek."
+
   </p>
 </section>
 
-<section id="counter">
+<section id="counter" class="fade-section">
   <h2>Ne Kadar Zamandır Biz? ⏳</h2>
   <p id="days"></p>
 </section>
 
-<section id="gallery">
+<section id="gallery" class="fade-section">
   <h2>Bana Seni Hatırlatan Şeyler 📸</h2>
   <div class="gallery">
-    <img src="Resimler\Reading.png">
-    <img src="Resimler\MusicReading.jpg">
-    <img src="Resimler\Orkide.png">
-    <img src="Resimler\Music.png">
-    <img src="Resimler\Plush.png">
-    <img src="Resimler\Sleep.png">
-    <img src="Resimler\ChocoMilk.png">
-    <img src="Resimler\Yegeni.jpg">
-    <img src="Resimler\poem.jpg">
-    <img src="Resimler\kuzu.png">
+    <img src="Resimler/Reading.png">
+    <img src="Resimler/MusicReading.jpg">
+    <img src="Resimler/Orkide.png">
+    <img src="Resimler/Music.png">
+    <img src="Resimler/Plush.png">
+    <img src="Resimler/Sleep.png">
+    <img src="Resimler/ChocoMilk.png">
+    <img src="Resimler/Yegeni.jpg">
+    <img src="Resimler/poem.jpg">
+    <img src="Resimler/kuzu.png">
   </div>
 </section>
 
-<section id="fun">
+<section id="fun" class="fade-section">
   <h2>Beni Seviyor Musun? 😏💖</h2>
   <button onclick="loveYes()">Evet 🥰</button>
   <button id="noBtn">Hayır 😈</button>
   <div class="surprise" id="loveResult"></div>
 </section>
 
-<section id="game">
+<section id="game" class="fade-section">
     <h2>Kalbimi Yakalayabilir misin? 💘🎯</h2>
     <p>10 saniyen var… Kalplere dokun 💖</p>
   
@@ -319,15 +349,15 @@ body::before{
   </section>
   
   
-<section id="final">
+<section id="final" class="fade-section">
   <h2>Sana Bir Sorum Var Hazırmısınnn💍</h2>
   <button onclick="finalYes()">Evet 💖</button>
   <button id="finalNo">Hayır 😅</button>
   <div class="surprise" id="finalText">
-    Sonsuza kadar benimle olur musun? 💍❤️
+    Sonsuza kadar benimle olur musun Çiçeğimmmm? 💍❤️
   </div>
 </section>
-<section id="heartLock">
+<section id="heartLock" class="fade-section">
   <h2>Kalbimi Açabilir misin? 🔒💖</h2>
 
   <div id="heartContainer">
@@ -335,7 +365,7 @@ body::before{
     <div id="bigHeart">💖</div>
   </div>
 
-  <div id="heartMessage"></div>
+  <div id="heartMessage" class="fade-section"></div>
 </section>
 
 <script>
@@ -602,7 +632,7 @@ function explodeHeart(){
 
 function showTypedMessage(){
   heartMsg.style.display="block";
-  const text="Kalbim hep seninle olacak 💖";
+  const text="Kalbim hep seninle olacak Sevgilimmmmm💖";
   let i=0;
 
   const typer=setInterval(()=>{
@@ -611,6 +641,24 @@ function showTypedMessage(){
     if(i>=text.length) clearInterval(typer);
   },80);
 }
+ const fadeSections = document.querySelectorAll(".fade-section");
+
+function handleScrollFade(){
+  const triggerBottom = window.innerHeight * 0.85;
+
+  fadeSections.forEach(section=>{
+    const boxTop = section.getBoundingClientRect().top;
+
+    if(boxTop < triggerBottom){
+      section.classList.add("show");
+    }else{
+      section.classList.remove("show");
+    }
+  });
+}
+
+window.addEventListener("scroll", handleScrollFade);
+window.addEventListener("load", handleScrollFade);
 
 
 

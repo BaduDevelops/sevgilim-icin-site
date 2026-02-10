@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💖 Sana</title>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family: system-ui, sans-serif;
+  background: linear-gradient(120deg,#ff758c,#ff7eb3);
+  color:#fff;
+  text-align:center;
+  overflow-x:hidden;
+}
+
+nav{
+  position:fixed;
+  top:0;
+  width:100%;
+  padding:12px;
+  background:rgba(0,0,0,.25);
+  backdrop-filter: blur(10px);
+  z-index:10;
+}
+nav a{
+  color:#fff;
+  margin:0 10px;
+  text-decoration:none;
+  font-weight:600;
+}
+
+section{
+  min-height:100vh;
+  padding:110px 20px;
+  animation:fade 1s ease;
+}
+
+h1{font-size:clamp(2.2em,6vw,3em)}
+h2{font-size:clamp(1.7em,5vw,2.3em)}
+p{max-width:750px;margin:20px auto;font-size:1.15em}
+
+button{
+  padding:15px 28px;
+  border:none;
+  border-radius:40px;
+  background:#fff;
+  color:#ff4f81;
+  font-size:1.1em;
+  cursor:pointer;
+  transition:.3s;
+  margin:10px;
+}
+button:hover{transform:scale(1.08)}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:none}
+}
+
+/* HEARTS */
+.heart{
+  position:fixed;
+  bottom:-10px;
+  font-size:22px;
+  animation:float linear forwards;
+  opacity:.7;
+}
+@keyframes float{
+  to{transform:translateY(-110vh)}
+}
+
+/* SURPRISE TEXT */
+.surprise{
+  display:none;
+  margin-top:30px;
+  font-size:1.4em;
+}
+
+/* GALLERY */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:15px;
+  max-width:900px;
+  margin:auto;
+}
+.gallery img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:18px;
+  transition:.4s;
+}
+.gallery img:hover{transform:scale(1.1)}
+
+/* FINAL */
+#final{
+  background:rgba(0,0,0,.25);
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <a href="#home">💖</a>
+  <a href="#story">📖</a>
+  <a href="#counter">⏳</a>
+  <a href="#gallery">📸</a>
+  <a href="#fun">😏</a>
+  <a href="#final">💍</a>
+</nav>
+
+<audio id="music" loop>
+  <source src="Lovers Rock(_j_sG_Juncn8_).mp3" type="audio/mpeg">
+</audio>
+
+<section id="home">
+  <h1>İyi ki varsın ❤️</h1>
+  <p>Bu site sana. Çünkü sen benim en güzel detayımsın.</p>
+  <button onclick="toggleMusic()">🎶 Müziği Aç / Kapat</button>
+  <br>
+  <button onclick="showHomeMessage()">Buraya Bas 💌</button>
+  <div class="surprise" id="homeMessage"></div>
+</section>
+
+<section id="story">
+  <h2>Bizim Hikâyemiz 💞</h2>
+  <p>
+    Seninle her şey daha anlamlı.  
+    Gülüşün, sesin, varlığın…  
+    Hayatımın en güzel kısmı.
+  </p>
+</section>
+
+<section id="counter">
+  <h2>Ne Kadar Zamandır Biz? ⏳</h2>
+  <p id="days"></p>
+</section>
+
+<section id="gallery">
+  <h2>Bana Seni Hatırlatan Şeyler 📸</h2>
+  <div class="gallery">
+    <img src="Resimler\Reading.png">
+    <img src="Resimler\MusicReading.jpg">
+    <img src="Resimler\Orkide.png">
+    <img src="Resimler\Music.png">
+    <img src="Resimler\Plush.png">
+    <img src="Resimler\Sleep.png">
+    <img src="Resimler\ChocoMilk.png">
+    <img src="Resimler\Yegeni.jpg">
+    <img src="Resimler\poem.jpg">
+    <img src="Resimler\kuzu.png">
+  </div>
+</section>
+
+<section id="fun">
+  <h2>Beni Seviyor Musun? 😏💖</h2>
+  <button onclick="loveYes()">Evet 🥰</button>
+  <button id="noBtn">Hayır 😈</button>
+  <div class="surprise" id="loveResult"></div>
+</section>
+
+<section id="final">
+  <h2>Sana Bir Sorum Var Hazırmısınnn💍</h2>
+  <button onclick="finalYes()">Evet 💖</button>
+  <button id="finalNo">Hayır 😅</button>
+  <div class="surprise" id="finalText">
+    Sonsuza kadar benimle olur musun? 💍❤️
+  </div>
+</section>
+
+<script>
+/* MUSIC */
+const music=document.getElementById("music");
+function toggleMusic(){
+  music.paused ? music.play() : music.pause();
+}
+
+/* DAY COUNTER */
+const startDate=new Date("2023-01-01");
+document.getElementById("days").innerHTML=
+  Math.floor((new Date()-startDate)/(1000*60*60*24))+
+  " gündür birlikteyiz 💖";
+
+/* HOME MESSAGE */
+const homeMessages=[
+  "Seni çok seviyorummmmmm 💖",
+  "Gülüşün dünyammmmmm 🌍",
+  "İyi ki benimsinnnn 🥰",
+  "Bitanecik Çiçeğimmm 🌺🌺❤️",
+  "Esmer Bombammm 👻😜",
+  "En güzel Rüyamm 🥰😻",
+  "Hayatımın Anlamıııı 😝😝",
+  "Kuzucuğummmmm 🐑🐑🫶🏿",
+  "Dötümün Tek Sahibi 🎶🔥🔥",
+  "Güzelimmmmmm Benimmmm 💝❤️‍🔥❤️‍🔥",
+  "Kalbim sana ait ❤️"
+];
+function showHomeMessage(){
+  const box=document.getElementById("homeMessage");
+  box.style.display="block";
+  box.innerHTML=homeMessages[Math.floor(Math.random()*homeMessages.length)];
+}
+
+/* LOVE YES + HEART EXPLOSION */
+function loveYes(){
+  const res=document.getElementById("loveResult");
+  res.style.display="block";
+  res.innerHTML="Ben de seni çooook seviyorummmmm hehehehe 💖🥰";
+  heartExplosion();
+}
+
+/* HEART EXPLOSION */
+function heartExplosion(){
+  for(let i=0;i<25;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="💖";
+    h.style.left="50vw";
+    h.style.animationDuration="2s";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),2000);
+  }
+}
+
+/* RUNNING BUTTONS */
+function makeRun(btn){
+  ["mouseover","touchstart"].forEach(e=>{
+    btn.addEventListener(e,()=>{
+      btn.style.transform=
+      `translate(${Math.random()*200-100}px,${Math.random()*200-100}px)`;
+    });
+  });
+}
+makeRun(document.getElementById("noBtn"));
+makeRun(document.getElementById("finalNo"));
+
+/* FLOATING HEARTS */
+setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="❤️";
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=(Math.random()*3+3)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+},400);
+
+/* FINAL */
+function finalYes(){
+  document.getElementById("finalText").style.display="block";
+}
+</script>
+
+</body>
+</html>

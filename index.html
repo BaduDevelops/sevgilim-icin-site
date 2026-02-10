@@ -34,26 +34,56 @@ nav a{
 }
 
 section{
-  min-height:100vh;
-  padding:110px 20px;
-  animation:fade 1s ease;
+  background:rgba(255,255,255,.12);
+  border-radius:35px;
+  padding: 150px 20px;
+  margin:40px 15px;
+  backdrop-filter: blur(14px);
+  box-shadow:0 25px 60px rgba(0,0,0,.25);
 }
+
 
 h1{font-size:clamp(2.2em,6vw,3em)}
 h2{font-size:clamp(1.7em,5vw,2.3em)}
 p{max-width:750px;margin:20px auto;font-size:1.15em}
 
 button{
-  padding:15px 28px;
+  padding:16px 34px;
   border:none;
-  border-radius:40px;
-  background:#fff;
-  color:#ff4f81;
+  border-radius:50px;
+  background: linear-gradient(135deg,#ffdde1,#ee9ca7);
+  color:#b1003a;
   font-size:1.1em;
+  font-weight:700;
   cursor:pointer;
-  transition:.3s;
-  margin:10px;
+  margin:12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
+  transition: all .35s ease;
+  position:relative;
+  overflow:hidden;
 }
+
+button::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.6),transparent);
+  transform:translateX(-100%);
+}
+
+button:hover::after{
+  animation:shine 1s forwards;
+}
+
+button:hover{
+  transform:scale(1.12) translateY(-3px);
+  box-shadow:0 18px 35px rgba(0,0,0,.35);
+}
+
+@keyframes shine{
+  to{transform:translateX(100%)}
+}
+
 button:hover{transform:scale(1.08)}
 
 @keyframes fade{
@@ -92,15 +122,58 @@ button:hover{transform:scale(1.08)}
   width:100%;
   height:220px;
   object-fit:cover;
-  border-radius:18px;
-  transition:.4s;
+  border-radius:22px;
+  transition:.45s;
+  box-shadow:0 12px 25px rgba(0,0,0,.3);
+  transition: transform .25s ease, box-shadow .25s ease;
 }
-.gallery img:hover{transform:scale(1.1)}
+
+.gallery img:hover {
+  transform: scale(1.12) rotate(var(--rot));
+  box-shadow: 0 18px 40px rgba(0,0,0,.45);
+}
 
 /* FINAL */
 #final{
   background:rgba(0,0,0,.25);
 }
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,.25), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(255,0,120,.25), transparent 45%);
+  z-index:-1;
+}
+
+@media(max-width:600px){
+  h1{font-size:2em}
+  h2{font-size:1.6em}
+  button{width:90%}
+  nav a{margin:0 6px}
+}
+
+#game{
+  position:relative;
+  overflow:hidden;
+  touch-action: manipulation;
+}
+
+.game-heart{
+  position:absolute;
+  font-size:32px;
+  cursor:pointer;
+  user-select:none;
+  animation:pop .25s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(0)}
+  to{transform:scale(1)}
+}
+
+
 </style>
 </head>
 
@@ -111,12 +184,13 @@ button:hover{transform:scale(1.08)}
   <a href="#story">📖</a>
   <a href="#counter">⏳</a>
   <a href="#gallery">📸</a>
+  <a href="#game">🎮</a>
   <a href="#fun">😏</a>
   <a href="#final">💍</a>
 </nav>
 
 <audio id="music" loop>
-  <source src="music.mp3" type="audio/mpeg">
+  <source src="Lovers Rock(_j_sG_Juncn8_).mp3" type="audio/mpeg">
 </audio>
 
 <section id="home">
@@ -143,11 +217,18 @@ button:hover{transform:scale(1.08)}
 </section>
 
 <section id="gallery">
-  <h2>Anılarımız 📸</h2>
+  <h2>Bana Seni Hatırlatan Şeyler 📸</h2>
   <div class="gallery">
-    <img src="aslan.png">
-    <img src="foto2.jpg">
-    <img src="foto3.jpg">
+    <img src="Resimler\Reading.png">
+    <img src="Resimler\MusicReading.jpg">
+    <img src="Resimler\Orkide.png">
+    <img src="Resimler\Music.png">
+    <img src="Resimler\Plush.png">
+    <img src="Resimler\Sleep.png">
+    <img src="Resimler\ChocoMilk.png">
+    <img src="Resimler\Yegeni.jpg">
+    <img src="Resimler\poem.jpg">
+    <img src="Resimler\kuzu.png">
   </div>
 </section>
 
@@ -158,8 +239,21 @@ button:hover{transform:scale(1.08)}
   <div class="surprise" id="loveResult"></div>
 </section>
 
+<section id="game">
+    <h2>Kalbimi Yakalayabilir misin? 💘🎯</h2>
+    <p>10 saniyen var… Kalplere dokun 💖</p>
+  
+    <button onclick="startGame()">Oyunu Başlat ▶️</button>
+  
+    <p id="scoreText">Skor: 0</p>
+    <p id="timeText">Süre: 10</p>
+  
+    <div class="surprise" id="gameResult"></div>
+  </section>
+  
+  
 <section id="final">
-  <h2>Sana Bir Sorum Var 💍</h2>
+  <h2>Sana Bir Sorum Var Hazırmısınnn💍</h2>
   <button onclick="finalYes()">Evet 💖</button>
   <button id="finalNo">Hayır 😅</button>
   <div class="surprise" id="finalText">
@@ -182,9 +276,16 @@ document.getElementById("days").innerHTML=
 
 /* HOME MESSAGE */
 const homeMessages=[
-  "Seni çok seviyorum 💖",
-  "Gülüşün dünyam 🌍",
-  "İyi ki benimsin 🥰",
+  "Seni çok seviyorummmmmm 💖",
+  "Gülüşün dünyammmmmm 🌍",
+  "İyi ki benimsinnnn 🥰",
+  "Bitanecik Çiçeğimmm 🌺🌺❤️",
+  "Esmer Bombammm 👻😜",
+  "En güzel Rüyamm 🥰😻",
+  "Hayatımın Anlamıııı 😝😝",
+  "Kuzucuğummmmm 🐑🐑🫶🏿",
+  "Dötümün Tek Sahibi 🎶🔥🔥",
+  "Güzelimmmmmm Benimmmm 💝❤️‍🔥❤️‍🔥",
   "Kalbim sana ait ❤️"
 ];
 function showHomeMessage(){
@@ -197,7 +298,7 @@ function showHomeMessage(){
 function loveYes(){
   const res=document.getElementById("loveResult");
   res.style.display="block";
-  res.innerHTML="Ben de seni çooook seviyorum 💖🥰";
+  res.innerHTML="Ben de seni çooook seviyorummmmm hehehehe 💖🥰";
   heartExplosion();
 }
 
@@ -209,6 +310,12 @@ function heartExplosion(){
     h.innerHTML="💖";
     h.style.left="50vw";
     h.style.animationDuration="2s";
+    document.body.style.background=
+    "linear-gradient(120deg,#ff9a9e,#fad0c4)";
+    setTimeout(()=>{
+    document.body.style.background="";
+    },200);
+
     document.body.appendChild(h);
     setTimeout(()=>h.remove(),2000);
   }
@@ -216,31 +323,146 @@ function heartExplosion(){
 
 /* RUNNING BUTTONS */
 function makeRun(btn){
-  ["mouseover","touchstart"].forEach(e=>{
-    btn.addEventListener(e,()=>{
+  ["mouseover","touchstart","click"].forEach(e=>{
+    btn.addEventListener(e,(ev)=>{
+      ev.preventDefault();
       btn.style.transform=
-      `translate(${Math.random()*200-100}px,${Math.random()*200-100}px)`;
+      `translate(${Math.random()*260-130}px,${Math.random()*260-130}px) rotate(${Math.random()*40-20}deg)`;
     });
   });
 }
+
 makeRun(document.getElementById("noBtn"));
 makeRun(document.getElementById("finalNo"));
 
 /* FLOATING HEARTS */
-setInterval(()=>{
-  const h=document.createElement("div");
-  h.className="heart";
-  h.innerHTML="❤️";
-  h.style.left=Math.random()*100+"vw";
-  h.style.animationDuration=(Math.random()*3+3)+"s";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),6000);
-},400);
+/* BACKGROUND HEART CONTROL */
+let bgHeartInterval = null;
+
+function startBackgroundHearts(){
+  if(bgHeartInterval) return;
+
+  bgHeartInterval = setInterval(()=>{
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerHTML = "❤️";
+    h.style.left = Math.random()*100 + "vw";
+    h.style.animationDuration = (Math.random()*3 + 3) + "s";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  },400);
+}
+
+function stopBackgroundHearts(){
+  clearInterval(bgHeartInterval);
+  bgHeartInterval = null;
+}
+
 
 /* FINAL */
 function finalYes(){
   document.getElementById("finalText").style.display="block";
 }
+
+document.querySelectorAll('.gallery img').forEach(img => {
+  img.addEventListener('mouseenter', () => {
+    const randomDeg = (Math.random() * 50 - 25).toFixed(2);
+    img.style.setProperty('--rot', `${randomDeg}deg`);
+  });
+});
+
+let gameScore = 0;
+let gameTime = 10;
+let gameRunning = false;
+let heartSpawnTimer = null;
+let countdownTimer = null;
+
+function startGame(){
+  if(gameRunning) return; // üst üste başlatma bug fix
+  stopBackgroundHearts();
+  gameRunning = true;
+  gameScore = 0;
+  gameTime = 10;
+
+  document.getElementById("scoreText").innerText = "Skor: 0";
+  document.getElementById("timeText").innerText = "Süre: 10";
+  document.getElementById("gameResult").style.display = "none";
+
+  clearHearts();
+
+  heartSpawnTimer = setInterval(spawnHeartSafe, 800);
+  countdownTimer = setInterval(gameCountdown, 1000);
+}
+
+function spawnHeartSafe(){
+  if(!gameRunning) return;
+
+  const gameArea = document.getElementById("game");
+  const heart = document.createElement("div");
+  heart.className = "game-heart";
+  heart.innerText = "💖";
+
+  const areaRect = gameArea.getBoundingClientRect();
+  const x = Math.random() * (areaRect.width - 40);
+  const y = Math.random() * (areaRect.height - 160) + 120;
+
+  heart.style.left = x + "px";
+  heart.style.top = y + "px";
+
+  heart.addEventListener("click", catchHeart);
+  heart.addEventListener("touchstart", catchHeart);
+
+  function catchHeart(e){
+    e.preventDefault();
+    if(!gameRunning) return;
+    gameScore++;
+    document.getElementById("scoreText").innerText = "Skor: " + gameScore;
+    heart.remove();
+    heartExplosion(); // senin mevcut efekt
+  }
+
+  gameArea.appendChild(heart);
+
+  setTimeout(()=>{
+    heart.remove();
+  },1200);
+}
+
+function gameCountdown(){
+  gameTime--;
+  document.getElementById("timeText").innerText = "Süre: " + gameTime;
+
+  if(gameTime <= 0){
+    endGameClean();
+  }
+}
+
+function endGameClean(){
+  gameRunning = false;
+
+  clearInterval(heartSpawnTimer);
+  clearInterval(countdownTimer);
+
+  clearHearts();
+
+  const res = document.getElementById("gameResult");
+  res.style.display = "block";
+
+  if(gameScore >= 7){
+    res.innerHTML = "Kalbimi yakaladın 💘<br>Zaten sana aitti 🥰";
+    heartExplosion();
+  }else{
+    res.innerHTML = "Biraz kaçtı ama sorun değil 😏<br>Kalbim yine senin 💖";
+  }
+  startBackgroundHearts();
+
+}
+
+function clearHearts(){
+  document.querySelectorAll(".game-heart").forEach(h => h.remove());
+}
+startBackgroundHearts();
+
 </script>
 
 </body>
